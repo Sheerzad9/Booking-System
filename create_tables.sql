@@ -20,51 +20,71 @@ USE bookingdb;
 
 -- Create the Instructor table
 CREATE TABLE Instructor (
-    InstructorID INT PRIMARY KEY AUTO_INCREMENT,
-    FirstName VARCHAR(50) NOT NULL,
-    LastName VARCHAR(50) NOT NULL,
-    Email VARCHAR(100) UNIQUE NOT NULL,
-    Phone VARCHAR(15),
-    Specialization VARCHAR(50)
+    instructor_id INT PRIMARY KEY AUTO_INCREMENT,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    phone VARCHAR(15),
+    specialization VARCHAR(50)
 );
 
 -- Create the DancingCategory table
 CREATE TABLE DancingCategory (
-    CategoryID INT PRIMARY KEY AUTO_INCREMENT,
-    CategoryName VARCHAR(50) NOT NULL,
-    InstructorID INT,
-    FOREIGN KEY (InstructorID) REFERENCES Instructor(InstructorID)
+    category_id INT PRIMARY KEY AUTO_INCREMENT,
+    category_name VARCHAR(50) NOT NULL,
+    instructor_id INT,
+    FOREIGN KEY (instructor_id) REFERENCES Instructor(instructor_id)
 );
 
--- Create the Customer table
-CREATE TABLE Customer (
-    CustomerID INT PRIMARY KEY AUTO_INCREMENT,
-    FirstName VARCHAR(50) NOT NULL,
-    LastName VARCHAR(50) NOT NULL,
-    Email VARCHAR(100) UNIQUE NOT NULL,
-    Phone VARCHAR(15),
-    Password VARCHAR(250) NOT NULL
+-- Create the Users table
+CREATE TABLE Users (
+    user_id INT PRIMARY KEY AUTO_INCREMENT,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    phone VARCHAR(15),
+    password VARCHAR(250) NOT NULL
 );
 
 -- Create the DanceClass table
 CREATE TABLE DanceClass (
-    ClassID INT PRIMARY KEY AUTO_INCREMENT,
-    ClassName VARCHAR(50) NOT NULL,
-    Schedule DATETIME NOT NULL,
-    Duration INT NOT NULL,
-    InstructorID INT,
-    Location VARCHAR(100),
-    FOREIGN KEY (InstructorID) REFERENCES Instructor(InstructorID)
+    class_id INT PRIMARY KEY AUTO_INCREMENT,
+    class_name VARCHAR(50) NOT NULL,
+    schedule DATETIME NOT NULL,
+    duration INT NOT NULL,
+    instructor_id INT,
+    location VARCHAR(100),
+    FOREIGN KEY (instructor_id) REFERENCES Instructor(instructor_id)
 );
 
 -- Create the Booking table
 CREATE TABLE Booking (
-    BookingID INT PRIMARY KEY AUTO_INCREMENT,
-    CustomerID INT,
-    ClassID INT,
-    BookingDate DATETIME,
-    Status VARCHAR(20),
-    FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID),
-    FOREIGN KEY (ClassID) REFERENCES DanceClass(ClassID)
+    booking_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    class_id INT,
+    bookingdate DATETIME,
+    status VARCHAR(20),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    FOREIGN KEY (class_id) REFERENCES DanceClass(class_id)
 );
+
+-- Create the Roles table
+CREATE TABLE Roles (
+    role_id INT PRIMARY KEY AUTO_INCREMENT,
+    role_description VARCHAR(50) NOT NULL,
+    Role VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE user_roles (
+    user_id INT NOT NULL,
+    role_id INT NOT NULL,
+    PRIMARY KEY (user_id, role_id),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    FOREIGN KEY (role_id) REFERENCES Roles(role_id)
+);
+
+INSERT INTO bookingdb.Roles (role_id, role_description, Role) VALUES (1, 'Admin role', 'ADMIN');
+INSERT INTO bookingdb.Roles (role_id, role_description, Role) VALUES (2, 'Employee role', 'EMPLOYEE');
+INSERT INTO bookingdb.Roles (role_id, role_description, Role) VALUES (3, 'Customer role', 'CUSTOMER');
+
 
